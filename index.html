@@ -1,0 +1,108 @@
+<!--
+Title: VGIFgallery.html
+Author: Jon K. Engelsman
+Date: June 12th, 2015
+Version: 0.0.1
+License: This work is licensed under the Creative Commons Attribution 4.0 International License. To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0/.
+-->
+
+<!doctype html>
+<html>
+	<head>
+		<style>
+			body{
+				width:100%; 
+				height:100%; 
+				overflow:hidden;
+				background-color: black;
+			}
+			.centered {
+			  position: fixed; /* or absolute */
+			  top: 50%;
+			  left: 50%;
+			  /* bring your own prefixes */
+			  transform: translate(-50%, -50%);
+			}
+		</style>
+	</head>
+	<body>
+	
+		<video id="video" width="auto" height="100%" loop=true class="centered"></video>
+		
+		<script src='vgifs.js' type='text/javascript'></script> 
+
+		<script>
+		
+			// Define global variables
+			var video, source, loopdelay, ii, playlist, vlto;
+		
+			// Get video element, create source element and add to video
+			video = document.getElementById('video');
+			source = document.createElement('source');
+			video.appendChild(source);
+			
+			// Add keydown event listener
+			document.addEventListener("keydown", keyDownEvent, false);
+			
+			// Initialize loopdelay and ii counter
+			loopdelay = 5000;
+			ii = 0;
+			
+			// Define runLoop function that will kick off the loop
+			function runLoop(){
+				changeVideo();
+			};
+			
+			// Define changeVideo function that will change the video being played
+			function changeVideo() {
+			
+				// Pause the html5 video
+				video.pause();
+				// Change the source attribute using type/video metadata from playlist
+				source.setAttribute('src', 'http://' + playlist[ii].type + '.gfycat.com/' + playlist[ii].gfyName + '.mp4'); 
+				// Duration of video clip from gfycat
+				var dur = playlist[ii].duration;
+				
+				// Define duration of loop, dependent on duration of clip
+				if(dur < 5){delay = 7.5;}
+				if(dur >= 5 & dur < 15){delay = 2*dur;}
+				if(dur >= 15){delay = dur;}
+
+				// Load the new source video and play
+				video.load();
+				video.play();
+				
+				// If ii counter has hit the end of the playlist, start back at 0
+				ii = (ii === playlist.length) ? 0:ii;
+
+				// Video loop timeout (vlto), increment ii counter and change video after delay (ms)
+				vlto = setTimeout(function() {
+					ii+=1;
+					changeVideo();
+				}, delay*1000);
+			}
+			
+			// Define keyDownEvent for left/right keys to move through video loop
+			function keyDownEvent(e) {
+				var keyCode = e.keyCode;
+				if(keyCode==37) { // Left
+					// Decrement ii counter, go to end of playlist if at the beginning
+					ii-=1; ii = (ii < 0) ? (playlist.length-1):ii;
+					// Clear the timeout to avoid timing mishaps
+					clearTimeout(vlto);
+					changeVideo();
+				} else if(keyCode==39) { // Right
+					// Increment ii counter, go to beginning if at the end of playlist
+					ii+=1; ii = (ii === playlist.length) ? 0:ii;
+					// Clear the timeout to avoid timing mishaps
+					clearTimeout(vlto);
+					changeVideo();
+				}
+			}
+			
+			// Initialize video loop!
+			runLoop();
+					
+		</script>
+	</body>
+</html>
