@@ -1,3 +1,5 @@
 # web-demo-vestasgifs
 
-Slideshow of gfycat clips from Vestas youtube videos. Automatic transition between clips or keyboard left/right to change clips.
+A simple slideshow of Vestas wind turbine gifs created from their Youtube videos (hosted on Gfycat). Automatic transition between clips or use keyboard left/right to change clips.
+
+![Vestas Wind Turbines](http://giant.gfycat.com/AnotherImprobableEider.gif)
